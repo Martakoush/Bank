@@ -1,51 +1,43 @@
-'use client'
-
 import React from 'react'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from './ui/form'
+import { FormControl, FormField, FormLabel, FormMessage } from './ui/form'
 import { Input } from './ui/input'
-import { Control, FieldPath, FieldValues } from 'react-hook-form'
+import { Control, FieldPath } from 'react-hook-form'
+import { z } from 'zod'
+import { authFormSchema } from '@/lib/utils'
 
-interface CustomInputProps<T extends FieldValues> {
-  control: Control<T>
-  name: FieldPath<T>
-  label: string
-  placeholder?: string
-  type?: string
+const formSchema =authFormSchema('sign-up')
+
+interface CustomInput {
+    control: Control<z.infer<typeof formSchema>>,
+    name: FieldPath<z.infer<typeof formSchema>>,
+    label: string,
+    placeholder: string
 }
-
-const CustomInput = <T extends FieldValues>({
-  control,
-  name,
-  label,
-  placeholder = '',
-  type = 'text'
-}: CustomInputProps<T>) => {
-  return (
+const CustomInput = ({ control, name, label, placeholder }: CustomInput ) => {
+return (
     <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <Input
-              {...field}
-              placeholder={placeholder}
-              type={type}
-              value={field.value ?? ''} // يتجنب undefined
+    name={name}
+    control={control}
+    render={({ field }) => (
+        <div className="form-item">
+        <FormLabel className="form-label">
+            {label}
+        </FormLabel>
+        <div className="flex w-full flex-col">
+            <FormControl>
+            <Input 
+                placeholder={placeholder}
+                className="input-class"
+                type={name === 'password' ? 'password' : 'text'}
+                {...field}
             />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
+            </FormControl>
+            <FormMessage className="form-message mt-2" />
+        </div>
+        </div>
+    )}
     />
-  )
+)
 }
 
 export default CustomInput
