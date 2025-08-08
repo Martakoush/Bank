@@ -45,7 +45,7 @@ const TransactionsTable = ({transactions}:TransactionTableProps) => {
 
           const isDebit = t.type === 'debit';
           const isCredit = t.type === 'credit';
-
+                    console.log(t)
           return (
             <TableRow key={t.id} className={`${isDebit || amount[0] === '-' ?'bg-[#FFFBFA]' : 'bg-[#f6fef9]'} !over:bg-none !border-b-default` }>
                 <TableCell className='max-w-[250px] pl-2 pr-10'>

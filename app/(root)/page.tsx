@@ -22,6 +22,7 @@ export default async function Home({ searchParams }: Props) {
   if (!accounts) return null;
 
   const accountsData = accounts?.data;
+  
   const appwriteItemId = searchParams?.id || accountsData[0]?.appwriteItemId;
 
   const account = await getAccount({ appwriteItemId });
@@ -55,7 +56,7 @@ export default async function Home({ searchParams }: Props) {
 
       <RightSidebar
         user={loggedIn}
-        transactions={accounts?.transactions}
+        transactions={account?.transactions}
         banks={accountsData?.slice(0, 2)}
       />
     </section>

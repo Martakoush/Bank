@@ -30,15 +30,16 @@ export const createTransaction = async (transaction: CreateTransactionProps) => 
   }
 }
 
-export const getTransactionsByBankId = async ({bankId}: getTransactionsByBankIdProps) => {
+export const getTransactionsByBankId = async ({ bankId }: getTransactionsByBankIdProps) => {
   try {
     const { database } = await createAdminClient();
 
+    
     const senderTransactions = await database.listDocuments(
       DATABASE_ID!,
       TRANSACTION_COLLECTION_ID!,
       [Query.equal('senderBankId', bankId)],
-    )
+    );
 
     const receiverTransactions = await database.listDocuments(
       DATABASE_ID!,
@@ -46,16 +47,19 @@ export const getTransactionsByBankId = async ({bankId}: getTransactionsByBankIdP
       [Query.equal('receiverBankId', bankId)],
     );
 
+    console.log("# This is the bank id #",bankId)
+
     const transactions = {
       total: senderTransactions.total + receiverTransactions.total,
       documents: [
-        ...senderTransactions.documents, 
+        ...senderTransactions.documents,
         ...receiverTransactions.documents,
-      ]
-    }
+      ],
+    };
 
-    return parseStringify(transactions);
+    return transactions; // بدون parseStringify
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    return { total: 0, documents: [] }; // إرجاع قيمة افتراضية في حال الخطأ
   }
-}
+};
